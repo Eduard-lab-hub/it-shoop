@@ -95,6 +95,7 @@ class Smartphone(Product):
         return "{} : {}".format(self.category.name, self.title)
     
     
+    
 class CartProduct(models.Model):
     
     user = models.ForeignKey('Customer', verbose_name='Покупатель', on_delete=models.CASCADE)
@@ -129,6 +130,9 @@ class Customer(models.Model):
     
     def __str__(self):
         return "Покупатель: {} {}".format(self.user.first_name, self.user.last_name)
+    
+    
+
     
     
 # class Specification(models.Model):
