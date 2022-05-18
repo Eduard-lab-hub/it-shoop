@@ -1,24 +1,37 @@
-# from unicodedata import category
-# from certifi import contents
+from audioop import reverse
 from django.db import models
-# from numpy import product
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
+
 User = get_user_model()
 
-# Create your models here.
 
-# Созд моделей
-# 1 - Category
-# 2 - Product
-# 3 - CartProduct
-# 4 - Cart
-# 5 - Order
+class LatestProductsManager:
+    
+    @staticmethod
+    def get_products_for_main_page(*args, **kwargs):
+        with_respect_to = kwargs.get('with_respect_to')
+        products = []
+        ct_models = ContentType.objects.filter(model__in=args)
+        for ct_model in ct_models:
+            model_products = ct_model.model_class()._base_manager.all().order_by('-id')[:5]
+            products.extend(model_products)
+        if with_respect_to:
+            ct_model = ContentType.objects.filter(model=with_respect_to)
+            if ct_model.exists():
+                # ct_model = ct_model.first()
+                if with_respect_to in args:
+                    return sorted(products, key=lambda x: x.__class__._meta.model_name.startswith(with_respect_to),reverse=True)
+        return products
 
-# 6 - Customer
-# 7 - Specification
+
+class LatestProducts:
+    
+    objects = LatestProductsManager()
+
+
 
 class Category(models.Model):
     

@@ -1,6 +1,5 @@
 from django.forms import ModelChoiceField
 from django.contrib import admin
-# from requests import request
 from .models import *
 
 
